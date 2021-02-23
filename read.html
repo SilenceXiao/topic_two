@@ -1,0 +1,24 @@
+
+一.
+创建并运行一个 Laravel 项目；
+	1.切换镜像加速
+		composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+
+	2.install  ( "8.*" 代表版本号);
+		<!-- composer create-project laravel/laravel Laravel --prefer-dist "8.*" -->
+		composer create-project laravel/laravel Laravel --prefer-dist "5.5"
+
+GIT 使用
+	1.配置全局用户
+		git config --global user.name "Your Name"
+		git config --global user.email your@example.com
+
+	2.设置默认推送方式 simple,避免push时未指定分支报错
+		git config --global push.default simple
+	3.git 命令
+		git init
+		git log 
+		git checkout -f  #丢弃当前所有修改
+	4.绑定github仓
+		git remote add origin 'github仓地址'
+		git push -u origin master
