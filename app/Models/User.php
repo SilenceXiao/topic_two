@@ -36,4 +36,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function gravatar($size = '140')
+    {
+        
+        $hash = md5(strtolower(trim($this->email)));
+        // return "http://www.gravatar.com/avatar/$hash?s=$size";
+        // return "https://cdn.learnku.com/uploads/sites/KDiyAbV0hj1ytHpRTOlVpucbLebonxeX.png";
+        return "/images/header.gif?s=$size";
+    }
 }
