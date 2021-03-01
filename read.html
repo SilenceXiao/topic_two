@@ -79,4 +79,7 @@ heroku
 		heroku addons:add heroku-postgresql:hobby-dev
 		heroku config #查看配置
 		heroku config:set IS_IN_HEROKU=true #新增配置项查看是否在heroku环境
+
+		heroku pg:reset DATABASE #重置数据库
+		heroku run php artisan migrate #数据库迁移
 		
