@@ -72,4 +72,11 @@ heroku
 用户注册
 	CSRF 保护
 		{{ csrf_field() }}
-	
+
+	old() #显示form表单提交失败时的旧数据
+
+	heroku上使用PostgreSQL
+		heroku addons:add heroku-postgresql:hobby-dev
+		heroku config #查看配置
+		heroku config:set IS_IN_HEROKU=true #新增配置项查看是否在heroku环境
+		
