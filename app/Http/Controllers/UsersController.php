@@ -10,13 +10,9 @@ class UsersController extends Controller
     //
 
     public function create(){
-        return view('users.singup');
+        return view('users.signup');
     }
 
-    public function singup(Request $request){
-
-    }
-    
     public function show(User $user){
         return view('users.show',compact('user'));
     }
@@ -35,7 +31,6 @@ class UsersController extends Controller
         ]);
         session()->flash('success', '欢迎，您将在这里开启一段新的旅程~');
 
-        // return view('users.show',['user' => $user]);
         // return view('users.show',['user' => $user]);
         return redirect()->route('users.show', [$user]);
     }

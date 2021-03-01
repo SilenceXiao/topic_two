@@ -20,7 +20,7 @@ Route::get('/','StaticPagesController@home')->name('home');
 Route::get('/help','StaticPagesController@help')->name('help');
 Route::get('/about','StaticPagesController@about')->name('about');
 
-Route::get('/singup', 'UsersController@create')->name('singup');
+Route::get('/signup', 'UsersController@create')->name('signup');
 Route::resource('users','UsersController');
 // resource 包含了这些
 // Route::get('/users', 'UsersController@index')->name('users.index');
@@ -30,4 +30,8 @@ Route::resource('users','UsersController');
 // Route::get('/users/{user}/edit', 'UsersController@edit')->name('users.edit');
 // Route::patch('/users/{user}', 'UsersController@update')->name('users.update');
 // Route::delete('/users/{user}', 'UsersController@destroy')->name('users.destroy');
+
+Route::get('/login', 'SessionsController@create')->name('login');
+Route::post('login', 'SessionsController@store')->name('login');
+Route::delete('logout', 'SessionsController@destroy')->name('logout');
 
