@@ -28,11 +28,17 @@ class UsersController extends Controller
             "password" => "required|confirmed|min:4"
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = $request->bcrypt($request->password);
+        // $user = User::create([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'password' => bcrypt($request->password),
+        // ]);
+        $user->save();
+        dd($user);
         session()->flash('success', '欢迎，您将在这里开启一段新的旅程~');
 
         // return view('users.show',['user' => $user]);
