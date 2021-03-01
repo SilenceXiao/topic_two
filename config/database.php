@@ -80,11 +80,19 @@ return [
         //     'schema' => 'public',
         //     'sslmode' => 'prefer',
         // ],
+
+        // "scheme" => "postgres"
+        // "host" => "ec2-54-242-43-231.compute-1.amazonaws.com"
+        // "port" => 5432
+        // "username" => "gzwjfecpjwscai"
+        // "password" => "f6e9d84a9324bf71383e04448eaa5feab1106f7bfdcbdf33ee87efc872033b95"
+        // "database" => "d29ptv4ofq6476"
         'pgsql' => [
             'driver'   => 'pgsql',
             'host'     => $db_config['host'],
             'port'     => env('DB_PORT', '5432'),
-            'database' => $db_config['database'],
+            // 'database' => $db_config['database'],
+            'database' => 'd29ptv4ofq6476',
             'username' => $db_config['username'],
             'password' => $db_config['password'],
             'charset' => 'utf8',
