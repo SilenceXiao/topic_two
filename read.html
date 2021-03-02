@@ -20,6 +20,7 @@ GIT 使用
 		git log 
 		git checkout -f  #丢弃当前所有修改
 		git clean -df #删除本地所有修改
+		git checkout . #清空本地修改(当前分支)
 	4.绑定github仓
 		git remote add origin 'github仓地址'
 		git push -u origin master
@@ -74,6 +75,7 @@ heroku
 		{{ csrf_field() }}
 
 	old() #显示form表单提交失败时的旧数据
+	bcrypt() # 加密
 
 	heroku上使用PostgreSQL
 		heroku addons:add heroku-postgresql:hobby-dev
@@ -85,3 +87,8 @@ heroku
 会话管理
 	{{ method_field('DELETE') }}
 	method_field()创建隐藏域 模拟delete 等请求		
+	登录
+		Auth::check()  bool #验证用户是否登录
+		Auth::attempt(array $credentials,bool $remember) #reuqest请求数据 remember（记住我）验证
+	验证
+		validate() #验证器	
