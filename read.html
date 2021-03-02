@@ -92,3 +92,4 @@ heroku
 		Auth::attempt(array $credentials,bool $remember) #reuqest请求数据 remember（记住我）验证
 	验证
 		validate() #验证器	
+		$this->validate($request, ['name' => 'in:field1,field2']);
