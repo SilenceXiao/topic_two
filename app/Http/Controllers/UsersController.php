@@ -82,4 +82,12 @@ class UsersController extends Controller
         $users = User::paginate(5);
         return view('users.index',['users'=>$users]);
     }
+
+
+    public function destroy(User $user){
+        $this->authorize('destroy', $user); //授权
+        $user->delete();
+        session()->flash('success','删除成功');
+        return back();
+    }
 }
