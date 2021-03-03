@@ -93,6 +93,13 @@ heroku
 	验证
 		validate() #验证器	
 		$this->validate($request, ['name' => 'in:field1,field2']);
-邮件发送
+用户CURD
+	intended() #有好得跳转方式 
+	{!! $users->render() !!} #laravel分页集成
+
 	
+邮件发送
+	生成令牌
+		Eloquent模型触发的一个事件。事件是 Laravel提供的监听器
+		
 	

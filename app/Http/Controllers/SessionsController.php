@@ -30,12 +30,18 @@ class SessionsController extends Controller
         ]);
 
         if(Auth::attempt($loginmsg,$request->has('remember'))){
+            if(Auth::user()->active){ //激活状态
 
-            session()->flash('success', '欢迎回来');
-            $fallback = route('users.show', [Auth::user()]);
-            return redirect()->intended($fallback);
-            // return redirect()->route('users.show',[Auth::user()]);
-            // return view('users.show',['user'=>Auth::user()]);
+                session()->flash('success', '欢迎回来');
+                $fallback = route('users.show', [Auth::user()]);
+                return redirect()->intended($fallback);
+                // return redirect()->route('users.show',[Auth::user()]);
+                // return view('users.show',['user'=>Auth::user()]);
+            }else{
+                Auth::logout();
+                session()->flash('worning', '账户未激活,请去邮箱激活');
+                return redirect('/');
+            }
 
         }else{
             session()->flash('danger', '很抱歉，您的邮箱和密码不匹配');
@@ -49,4 +55,5 @@ class SessionsController extends Controller
         session()->flash('success', '您已成功退出！');
         return redirect('login');
     }
+
 }

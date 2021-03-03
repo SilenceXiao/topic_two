@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class UsersController extends Controller
 {
@@ -14,7 +15,7 @@ class UsersController extends Controller
     {
         //中间键
         $this->middleware('auth',[
-            'except' => ['show','create','store','index'], #指定不用过滤
+            'except' => ['show','create','store','index','confirmEmail'], #指定不用过滤
             // 'only' => ['show','create','store'] # 指定过滤
         ]);
 
@@ -45,11 +46,12 @@ class UsersController extends Controller
             'password' => bcrypt($request->password),
         ]);
         
-        session()->flash('success', '欢迎，您将在这里开启一段新的旅程~');
-        Auth::login($user);
-        
+        $this->sendEmail($user);
+        session()->flash('success', '验证邮件已发送到你的注册邮箱上，请注意查收');
+        // Auth::login($user);
         // return view('users.show',['user' => $user]);
-        return redirect()->route('users.show', [$user]);
+        // return redirect()->route('users.show', [$user]);
+        return redirect('/');
     }
 
 
@@ -89,5 +91,38 @@ class UsersController extends Controller
         $user->delete();
         session()->flash('success','删除成功');
         return back();
+    }
+
+    //用户激活邮件验证
+    public function confirmEmail($userId,$token){
+        $user = User::findOrFail($userId);
+        if($user->active_token == $token){
+            $user->active = true;
+            $user->active_token = null;
+            $user->save();
+            Auth::login($user);
+
+            session()->flash('success','激活成功,并登录成功');
+            return redirect()->route('users.show',[$user]);
+
+        }else{
+            session()->flash('warning','激活失败,请再次尝试');
+            return redirect()->back();
+        }
+        // $user = User::where('active_token',$token)->firstOrFail();
+        
+    }
+
+    //用户注册发送邮件
+    protected function sendEmail($user){
+        $view = 'emails.email';
+        $data = compact('user');
+        $from = 'wl@example.com';
+        $name = 'wl';
+        $to = $user->email;
+        $subject = "感谢注册 TopicTwo 应用！请确认你的邮箱。";
+        Mail::send($view, $data, function ($message) use ($from, $name, $to, $subject) {
+            $message->from($from, $name)->to($to)->subject($subject);
+        });
     }
 }
