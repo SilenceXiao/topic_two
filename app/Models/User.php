@@ -38,6 +38,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // public $hasMany = [
+    //     'statuses' => [Status::class],
+    // ];
+
     public function gravatar($size = '140')
     {
         
@@ -55,5 +59,14 @@ class User extends Authenticatable
             $user->active_token = Str::random(10);
         });
 
+    }
+
+    //用户多个动态
+    public function statuses(){
+        return $this->hasMany(Status::class);
+    }
+
+    public function feed(){
+        return $this->statuses()->orderBy('created_at','desc');
     }
 }
