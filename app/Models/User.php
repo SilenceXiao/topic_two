@@ -69,4 +69,14 @@ class User extends Authenticatable
     public function feed(){
         return $this->statuses()->orderBy('created_at','desc');
     }
+
+    //粉丝
+    public function followers(){
+        return $this->belongsToMany(User::class,'followers','users_id','follower_id');
+    }
+
+    //关注人
+    public function following(){
+        return $this->belongsToMany(User::class,'followers','follower_id','users_id');
+    }
 }

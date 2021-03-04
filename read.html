@@ -102,10 +102,17 @@ heroku
 邮件发送
 	生成令牌
 		Eloquent模型触发的一个事件。事件是 Laravel提供的监听器
+		boot(){
+			static::creating(){
+
+			}
+		}
 
 微博
 	显示微博
 		$status->created_at->diffForHumans() #可读性更佳的日期展示形式。
+	批量赋值假数据时需要设置白名单
+	
 	
 		
 	
