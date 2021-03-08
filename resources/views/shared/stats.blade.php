@@ -1,10 +1,10 @@
-<a href="#">
+<a href="{{ route('users.followings',$user->id) }}">
   <strong id="following" class="stat">
     {{ count($user->following) }}
   </strong>
   关注
 </a>
-<a href="#">
+<a href="{{ route('users.followers',$user->id) }}">
   <strong id="followers" class="stat">
     {{ count($user->followers) }}
   </strong>
