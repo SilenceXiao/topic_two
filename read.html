@@ -94,7 +94,7 @@ heroku
 		validate() #验证器	
 		$this->validate($request, ['name' => 'in:field1,field2']);
 用户CURD
-	intended() #有好得跳转方式 
+	intended() #友好的跳转方式 
 	{!! $users->render() !!} #laravel分页集成
 	trait 申明的类 可以被子类继承多个
 
@@ -113,6 +113,21 @@ heroku
 		$status->created_at->diffForHumans() #可读性更佳的日期展示形式。
 	批量赋值假数据时需要设置白名单
 	
+粉丝关系
+	动态流
+		动态流是两个词
+		一个是动态 指的就是类似微博 朋友圈信息 说说状态这种数据统称动态 status
+		一个是信息流 指的是按照时间线去展示数据的方式
+
+	使用预加载 with()来避免N+1 查询问题;
+
+	添加关联数据
+		sync([],false); #已存在时则不添加
+	删除关联数据
+		detach([]);
+
+		
+
 	
 		
 	
