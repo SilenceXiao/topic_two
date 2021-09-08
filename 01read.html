@@ -1,1 +1,174 @@
+运行Vagrant
+
+vagrant init  -- 初始化vagrant
+vagrant up    -- 启动vagrant
+vagrant halt  -- 关闭vagrant
+vagrant ssh   -- 通过SSH登录vagrant(先启动vagrant)
+vagrant provision -- 重新应用更改vagrant配置
+vagrant destroy -- 删除vagrant
+
+vagrant provision && vagrant reload  -- 重新应用更改vagrant配置 并是重启虚拟机使更改生效。
+
+ls C:/Users/Administrator.WIN7-1909282051/.ssh
+
+npm run dev --
+npm run watch-poll -- 运行npm
+
+linux 文件操作
+
+mkdir app/Models -- 在app目录下创建Models目录
+mv app/User.php app/Models/User.php -- 将User.php文件移到Models下
+
+git checkout -f -- 丢弃暂存的区的文件（add后未commit的）
+
+5.3 数据库迁移
+	php artisan migrate
+    数据库回滚
+	php artisan migrate:rollback
+5.5 进入Tinker环境
+	php artisan tinker
+6.3 数据库重置
+	php artisan migrate:refresh
+
+	bcrypt() 密码加密
+
+	old()函数帮助在模板中显示旧输入数据 
+	<input type="password" name="password" class="form-control" value="{{ old('password') }}">
+	
+	return redirect()->back()->withInput();
+	使用 withInput() 后模板里 old('email') 将能获取到上一次用户提交的内容
+
+6.4  数据验证
+	validate($reuquest,['rule'=>'xx|xx']) 
+	方法接收两个参数，第一个参数为用户的输入数据，第二个参数为该输入数据的验证规则。
+	验证多个条件时，则可使用 | 对验证规则进行分割。 
+
+	Laravel 为了安全考虑，会让我们提供一个 token（令牌）来防止我们的应用受到 CSRF（跨站请求伪造）的攻击
+	在form表单中加入 {{ csrf_field() }} 即可
+
+7.2 会话
+	使用 Illuminate\Http\Request 实例来接收用户输入的数据 $request->xxxx
+
+	使用Auth::attempt([]) 来完成用户验证
+	->验证email->如果找到->先将用户提交的密码进行哈希加密->然后与数据库密码进行匹配
+	->匹配成功后会创建一个【会话】给当前用户,同时种下一个laravel_session的 HTTP Cookie,用此Cookie记录用户登录状态
+	->如果email 匹配不成功 返回 false
+	->密码匹配不成功 返回 false
+
+7.3 登录
+	Auth::check() 检测用户登录是否已经登录
+
+7.4 使用隐藏域来伪造delete请求 method_field('DELETE')
+	{{ method_field('DELETE') }}
+	Auth::logout() 实现用户退出
+
+7.5 记住我
+	Auth::attempt([],$request->has('remember')) 方法可接收两个参数 1 -> 用户数组 2 -> 是否记住我的布尔值
+
+8.2 更新用户
+	用隐藏域来伪造patch请求 method_field('PATCH')
+	{{ method_field('PATCH') }} -> <input type="hidden" name="_method" value="PATCH">
+
+8.3 权限系统
+	1.创建授权策略
+		a.限制未登录的用户更改资料
+			通过Laravel 中间件 Middleware 提供的过滤机制来验证
+			中间件的文件放在项目的 app\Http\Middleware文件夹中
+			middleware(name,action) 接收两个参数，中间件名称,过滤的动作
+			except,only 类似于 黑名单，白名单两种方式指定不过滤，或过滤动作，首选 except 黑名单 
+			Auth 中间件提供的 guest 选项，用于指定一些只允许未登录用户访问的动作
+
+		b.限制登录的用户只能改自己的资料
+			Laravel 中可以使用 授权策略 (Policy) 来对用户的操作权限进行验证
+			所有生成的授权策略文件都会被放置在 app/Policies 文件夹下。
+	2.注册授权策略
+		laravel提供两种注册授权策略，1.手动指定，2 5.8版本后的--自动授权注册
+		自动授权默认会假设 Model 模型文件直接存放在 app 目录下，鉴于我们已将模型存放目录修改为 app/Models，
+		修改自动授权规则, app/Providers/AuthServiceProvider.php boot()方法自定义
+			Gate::guessPolicyNamesUsing(function ($modelClass) {
+	            // 动态返回模型对应的策略名称，如：// 'App\Models\User' => 'App\Policies\UserPolicy',
+	            return 'App\Policies\\'.class_basename($modelClass).'Policy';
+	        });
+	    默认的 App\Http\Controllers\Controller 类包含了 Laravel 的 AuthorizesRequests trait
+	    此 trait 提供了 authorize()方法 快速授权指定策略，
+	    使用 authorize(name,data) 验证用户授权策略 第一个参数 策略名称 二参数 验证数据
+
+	3.重定向问题 
+		redirect() 实例提供了一个 intended()方法，可将页面重定向到上一次请求尝试访问的页面上，
+		并接收一个默认跳转地址参数，当上一次请求记录为空时，跳转到默认地址上。
+	    $fallback = route('users.show', Auth::user());
+        return redirect()->intended($fallback);
+
+8.4 用户列表
+	1.compact('users')；该函数会自动去匹配变量名为users的变量，然后组装成 key=>value 的键值对数组（users=>$users）;
+	2.假数据生产（测试数据）
+		a.对要生成假数据的模型指定字段进行赋值 - 『模型工厂』；  
+		b.批量生成假数据模型 - 『数据填充』；
+		1.模型工厂
+			Laravel 集成 Faker拓展包
+			database/factories/UserFactory.php 文件为指定模型的每个字段设置随机值。
+		2.数据填充
+			使用Seeder 类来填充测试数据 文件放于 database/seeds 目录下
+			database/seeds/UsersTableSeeder.php 创建测试文件
+			使用  factory() 这个辅助函数来生成一个使用假数据的用户对象。
+			$users = factory(User::class)->times(50)->make();
+			User::insert($users->makeVisible(['password', 'remember_token'])->toArray());
+			times() 接受一个参数用于指定要创建的模型数量
+			make() 创建一个集合
+			makeVisible() 方法临时显示 User 模型里指定的隐藏属性 $hidden
+			使用insert()将生成的假数据批量插入
+			最后在 DatabaseSeeder （database/seeds/DatabaseSeeder.php）中调用 call 方法来指定我们要运行假数据填充的文件。
+
+			public function run(){
+		        Model::unguard();
+
+		        $this->call(UsersTableSeeder::class);//此处
+
+		        Model::reguard();
+		    }
+		    为了批量填充数据，当然要暂时性关闭安全保护，填充完毕后重新打开保护。
+		    unguard() 用于解除对于数据库的填充限制，reguard() 则是重新加上这个限制
+	3. 分页
+		$users = User::paginate(10);
+		页面上渲染 {!! $users->render() !!}
+8.5 删除用户
+	
+	删除用户的动作，有两个逻辑需要提前考虑：
+		1.只有当前登录用户为管理员才能执行删除操作；
+		2.删除的用户对象不是自己（即使是管理员也不能自己删自己）。
+
+	Laravel 授权策略提供了 @can Blade 命令 配合【授权策略类 app/Policies/UserPolicy.php】进行授权判断
+	resources/views/users/_user.blade.php
+	->	@can('destroy', $user)
+			<button type="submit" class="btn btn-sm btn-danger delete-btn">删除</button>
+		@endcan
+
+9 账户激活
+	1.生成令牌
+		用户的激活令牌需要在用户创建（注册）之前就先生成好
+		可以通过监听模型被创建之前的 creating【该方法是由 Eloquent 模型触发的一个事件】 方法来做到
+		Eloquent 模型默认提供了多个事件
+			creating 用于监听模型被创建之前的事件，created 用于监听模型被创建之后的事件。
+		在Model层 app/Models/User.php
+			use Illuminate\Support\Str;
+
+			public static function boot()
+		    {
+		        parent::boot();
+
+		        static::creating(function ($user) { //监听事件
+		            $user->activation_token = Str::random(10);
+		        });
+		    }
+		boot() 方法会在用户模型类完成初始化之后进行加载
+
+	2.发送邮件
+		Mail::send(a,b,function(){});
+		第一个参数是包含邮件消息的视图名称。
+		第二个参数是要传递给该视图的数据数组。
+		最后是一个用来接收邮件消息实例的闭包回调，我们可以在该回调中自定义邮件消息的发送者、接收者、邮件主题等信息。
+	3.Model 查询 
+		firstOrFail() 取第一个用户,否则会返回404响应
+		
+
 
